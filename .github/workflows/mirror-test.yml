@@ -1,26 +1,28 @@
-name: Test Mirror Push
+name: Mirror Push to Collaborator Repo
 
 on:
   push:
     branches:
-      - main
+      - main  # Change this if your default branch is different
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source repo
+      - name: Checkout Source Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch entire history for mirroring
 
-      - name: Set up SSH key
+      - name: Set up SSH for GitHub Deploy Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.MIRROR_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Add test mirror remote and push
+      - name: Add Mirror Remote and Push
         run: |
           git remote add mirror git@github.com:GhulamMohiodin/repo-mirror-test.git
-          git push mirror HEAD:main --force
+          git push --mirror mirror
