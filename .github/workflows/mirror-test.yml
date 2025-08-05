@@ -3,17 +3,18 @@ name: Mirror Push to Collaborator Repo
 on:
   push:
     branches:
-      - main  # Change this if your default branch is different
+      - main # Change this if your default branch is different
 
 jobs:
   mirror:
+    if: github.repository == 'GhulamMohiodin/test'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Source Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch entire history for mirroring
+          fetch-depth: 0 # Fetch entire history for mirroring
 
       - name: Set up SSH for GitHub Deploy Key
         run: |
